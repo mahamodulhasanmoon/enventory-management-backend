@@ -1,15 +1,14 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 
-// middleware
+//middlewares
 app.use(express.json());
 app.use(cors());
 
 // schema design
-
-const productSchema = Schema({
+const productSchema = mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please provide a name for this product."],
@@ -59,46 +58,101 @@ const productSchema = Schema({
       message: "status can't be {VALUE}"
     }
   },
+  // createdAt: {
+  //   type: Date,
+  //   default: Date.now,
+  // },
+  // updatedAt: {
+  //   type: Date,
+  //   detfault: Date.now
+  // }
+  // supplier: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Supplier"
+  // },
+  // categories: [{
+  //   name: {
+  //     type: String,
+  //     required: true
+  //   },
+  //   _id: mongoose.Schema.Types.ObjectId
+  // }]
 }, {
   timestamps: true,
 })
 
-// make schema model 
 
-const Product = model('Product', productSchema)
+
+// mongoose middlewares for saving data: pre / post 
+
+ productSchema.pre('save',function(next){
+
+  //this -> 
+   console.log(' Before saving data');
+     if (this.quantity == 0) {
+      this.status = 'out-of-stock'
+    }
+
+   next()
+ })
+
+
+//  productSchema.post('save',function(doc,next){
+//   console.log('After saving data');
+
+//   next()
+// })
+
+productSchema.methods.logger= function(){
+  console.log(` Data saved for ${this.name}`);
+}
+
+
+// SCHEMA -> MODEL -> QUERY
+
+const Product = mongoose.model('Product', productSchema)
+
+
 
 app.get("/", (req, res) => {
   res.send("Route is working! YaY!");
 });
 
-app.post('/api/v1/product', async (req, res, next)=>{
+// posting to database
+
+app.post('/api/v1/product', async (req, res, next) => {
 
   try {
-    // const result = await Product.create(req.body) 
+    // save or create
 
-        const product = new Product(req.body)
+     const result = await Product.create(req.body) 
 
-    // instance creation--> Do something --> save()
+     result.logger()
 
-    if (product.quantity == 0) {
-      product.status = 'out-of-stock'
-    }
 
-    const result = await product.save()
+    // const product = new Product(req.body)
+
+    // // instance creation--> Do something --> save()
+
+    // if (product.quantity == 0) {
+    //   product.status = 'out-of-stock'
+    // }
+
+    // const result = await product.save()
 
     res.status(200).json({
       status: 'success',
       messgae: 'Data inserted successfully!',
       data: result
     })
-
-  }catch(err) {
+  } catch (error) {
     res.status(400).json({
       status: 'fail',
       message: ' Data is not inserted ',
-      error: err.message
+      error: error.message
     })
   }
+
 
 })
 
