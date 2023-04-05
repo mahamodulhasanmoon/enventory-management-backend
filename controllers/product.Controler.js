@@ -1,4 +1,5 @@
 const Product = require("../Models/Products")
+const { getProductService } = require("../services/product.services")
 
 exports.createProduct = async (req, res, next) => {
 
@@ -40,7 +41,7 @@ exports.createProduct = async (req, res, next) => {
   exports.getProducts = async(req,res,next) => {
 
     try {
-      const products = await Product.find({})
+      const products =await getProductService()
       res.status(200).json({
         status: 'success',
         data: products
