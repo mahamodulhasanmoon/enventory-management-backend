@@ -1,0 +1,13 @@
+
+###
+POST http://localhost:5000/api/v1/product
+content-type: application/json
+
+{
+    "name": "dhal",
+    "description": "Wed, 21 Oct 2015 18:27:50 GMT",
+    "price":400,
+    "unit":"kg",
+    "status": "in-stock",
+    "quantity":0
+}

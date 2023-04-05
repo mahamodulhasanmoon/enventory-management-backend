@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { Schema } = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 // middleware
 app.use(express.json());
@@ -9,7 +9,7 @@ app.use(cors());
 
 // schema design
 
-const productsSchema = Schema({
+const productSchema = Schema({
   name: {
     type: String,
     required: [true, "Please provide a name for this product."],
@@ -59,32 +59,48 @@ const productsSchema = Schema({
       message: "status can't be {VALUE}"
     }
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    detfault: Date.now
-  },
-  supplier: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Supplier"
-  },
-  categories: [{
-    name: {
-      type: String,
-      required: true
-    },
-    _id: mongoose.Schema.Types.ObjectId
-  }]
 }, {
   timestamps: true,
 })
 
+// make schema model 
+
+const Product = model('Product', productSchema)
+
 app.get("/", (req, res) => {
   res.send("Route is working! YaY!");
 });
+
+app.post('/api/v1/product', async (req, res, next)=>{
+
+  try {
+    // const result = await Product.create(req.body) 
+
+        const product = new Product(req.body)
+
+    // instance creation--> Do something --> save()
+
+    if (product.quantity == 0) {
+      product.status = 'out-of-stock'
+    }
+
+    const result = await product.save()
+
+    res.status(200).json({
+      status: 'success',
+      messgae: 'Data inserted successfully!',
+      data: result
+    })
+
+  }catch(err) {
+    res.status(400).json({
+      status: 'fail',
+      message: ' Data is not inserted ',
+      error: err.message
+    })
+  }
+
+})
 
 
 module.exports = app;
