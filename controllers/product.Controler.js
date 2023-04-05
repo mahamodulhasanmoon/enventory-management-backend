@@ -1,29 +1,19 @@
 const Product = require("../Models/Products")
-const { getProductService } = require("../services/product.services")
+const { getProductService, createProductService } = require("../services/product.services")
 
 exports.createProduct = async (req, res, next) => {
 
     try {
       // save or create
   
-       const result = await Product.create(req.body) 
+       const result =await createProductService(req.body)
   
        result.logger()
   
   
-      // const product = new Product(req.body)
-  
-      // // instance creation--> Do something --> save()
-  
-      // if (product.quantity == 0) {
-      //   product.status = 'out-of-stock'
-      // }
-  
-      // const result = await product.save()
-  
       res.status(200).json({
         status: 'success',
-        messgae: 'Data inserted successfully!',
+        msg: 'Data inserted successfully!',
         data: result
       })
     } catch (error) {

@@ -3,11 +3,11 @@ GET http://localhost:5000/api/v1/products
 
 
 ###
-POST http://localhost:5000/api/v1/product
+POST http://localhost:5000/api/v1/products
 content-type: application/json
 
 {
-    "name": "oil",
+    "name": "condom",
     "description": "Wed, 21 Oct 2015 18:27:50 GMT",
     "price":400,
     "unit":"kg",
