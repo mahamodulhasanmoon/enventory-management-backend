@@ -3,7 +3,7 @@ GET http://localhost:5000/api/v1/products
 
 ### Get data with using query parameters
 
-GET http://localhost:5000/api/v1/products?status=in-stock&limit=3&sort=1
+GET http://localhost:5000/api/v1/products?price[gt]=200
 
 
 ###

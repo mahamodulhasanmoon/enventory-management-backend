@@ -1,3 +1,4 @@
+const { json } = require("express")
 const Product = require("../Models/Products")
 const { getProductService, createProductService, updatedProductService, bulkUpdateProductService, deleteProductService, bulkDeleteProductService } = require("../services/product.services")
 
@@ -31,14 +32,30 @@ exports.createProduct = async (req, res, next) => {
   exports.getProducts = async(req,res,next) => {
 
     try {
-      const queryObj = {...req.query}
+      let filters = {...req.query}
 
-      // exclude sort limit 
+      // for status
 
       const excludeFields = ['page', 'limit', 'sort']
-      excludeFields.forEach(field =>  delete queryObj[field] )
+      excludeFields.forEach(field =>  delete filters[field] )
 
-      const products =await getProductService(queryObj)
+      // for sorting low to high
+      let filterString = JSON.stringify(filters)
+      filterString = filterString.replace(/\b(gt|gte|lt|lte)\b/g , match=> `$${match}`)
+filters = JSON.parse(filterString)
+
+// sorting
+
+const queries = {};
+
+if (req.query.sort) {
+  const sortBy = req.query.sort.split(',').join(' ')
+ queries.sortBy = sortBy
+
+  
+}
+
+      const products =await getProductService(filters,queries)
       res.status(200).json({
         status: 'success',
         data: products
