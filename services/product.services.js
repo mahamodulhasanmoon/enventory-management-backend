@@ -13,5 +13,8 @@ exports.createProductService = async(data)=>{
 
 
 exports.updatedProductService = async(id,data)=>{
-    const result = await Product.updateOne({_id: id}, {$set: data})
+    // const result = await Product.updateOne({_id: id}, {$set: data},{runValidators: true})
+    const product = await Product.findById(id)
+    const result = await product.set(data).save()
+    return result
 }
