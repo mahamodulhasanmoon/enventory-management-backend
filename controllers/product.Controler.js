@@ -44,6 +44,9 @@ exports.createProduct = async (req, res, next) => {
       filterString = filterString.replace(/\b(gt|gte|lt|lte)\b/g , match=> `$${match}`)
 filters = JSON.parse(filterString)
 
+
+
+
 // sorting
 
 const queries = {};
@@ -54,6 +57,18 @@ if (req.query.sort) {
 
   
 }
+
+if (req.query.page) {
+  const {page=1, limit=10} = req.query;  
+
+      const skip = (page - 1)*parseInt(limit);
+      queries.skip=skip;
+      queries.limit=parseInt(limit);
+
+  
+}
+
+
 
       const products =await getProductService(filters,queries)
       res.status(200).json({
