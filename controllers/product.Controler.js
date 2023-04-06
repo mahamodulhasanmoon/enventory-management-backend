@@ -31,7 +31,14 @@ exports.createProduct = async (req, res, next) => {
   exports.getProducts = async(req,res,next) => {
 
     try {
-      const products =await getProductService()
+      const queryObj = {...req.query}
+
+      // exclude sort limit 
+
+      const excludeFields = ['page', 'limit', 'sort']
+      excludeFields.forEach(field =>  delete queryObj[field] )
+
+      const products =await getProductService(queryObj)
       res.status(200).json({
         status: 'success',
         data: products
