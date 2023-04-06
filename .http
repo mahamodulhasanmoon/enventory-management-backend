@@ -1,16 +1,20 @@
 ### 
 GET http://localhost:5000/api/v1/products
 
+### Get data with using query parameters
+
+GET http://localhost:5000/api/v1/products?status=in-stock&limit=3&sort=1
+
 
 ###
 POST http://localhost:5000/api/v1/products
 content-type: application/json
 
 {
-    "name": "panther condom",
-    "description": "Wed, 21 Oct 2015 18:27:50 GMT",
-    "price":400,
-    "unit":"kg",
+    "name": "Fresh Refined Sugar",
+    "description": "Fresh Refined sugar is a modern processes of without touching hand to protect the health of assurance. Fresh refined sugar is completely acid, fecal residues free and neat and clean, healthy, granulated sugar.",
+    "price":365,
+    "unit":"pcs",
     "status": "in-stock",
     "quantity":0
 }
