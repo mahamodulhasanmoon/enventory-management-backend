@@ -14,3 +14,13 @@ content-type: application/json
     "status": "in-stock",
     "quantity":0
 }
+
+### update product
+
+PATCH http://localhost:5000/api/v1/products/642dc46dac6c00088ca39d47
+
+content-type: application/json
+
+{
+    "name": "hello product",
+}
