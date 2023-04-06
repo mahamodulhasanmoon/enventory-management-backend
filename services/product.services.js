@@ -18,3 +18,19 @@ exports.updatedProductService = async(id,data)=>{
     const result = await product.set(data).save()
     return result
 }
+
+
+exports.bulkUpdateProductService = async(data)=>{
+    // const result = await Product.updateMany({_id: data.ids},data.data, {runValidators: true})
+    // return result
+
+    // bulk update separate product
+    
+    const products = [];
+    data.ids.forEach(product => {
+       products.push( Product.updateOne({_id: product.id},product.data))
+       
+    })
+    const result = await Promise.all(products)
+    return result
+}
